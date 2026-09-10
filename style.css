@@ -331,6 +331,18 @@ section + section{ border-top:1px solid var(--line-soft); }
 .exp-body li::before{ content:"›"; position:absolute; left:0; color:var(--pink); }
 .exp-body strong{ color:var(--text); }
 
+/* "View certificate" link — used in Experience, Achievements, Training cards */
+.cert-link{
+    display:inline-flex; align-items:center; gap:.4rem; margin-top:1rem;
+    font-family:var(--font-mono); font-size:.72rem; letter-spacing:.06em;
+    text-transform:uppercase; color:var(--pink);
+    border:1px solid var(--pink-dim); border-radius:99px; padding:.4rem .8rem;
+    transition:.2s;
+}
+.cert-link:hover{ background:var(--pink); color:#0c0709; border-color:var(--pink); }
+.cert-link i{ font-size:1rem; }
+.org-card .cert-link, .ach-card .cert-link{ margin-top:.9rem; }
+
 /* =========================================================
    PROJECTS (thesis spotlight)
    ========================================================= */
@@ -340,13 +352,14 @@ section + section{ border-top:1px solid var(--line-soft); }
     padding:2.4rem;
 }
 .thesis-visual{
-    position:relative; aspect-ratio:4/3; border-radius:12px; overflow:hidden;
+    position:relative; border-radius:12px; overflow:hidden;
     background:
         linear-gradient(135deg, rgba(255,77,130,.14), transparent 60%),
         var(--surface-2);
     border:1px solid var(--line);
     display:flex; align-items:center; justify-content:center;
 }
+.thesis-visual img{ position:static; display:block; width:100%; height:auto; object-fit:initial; }
 .marker-demo{ width:70%; aspect-ratio:1; position:relative; }
 .marker-demo .m-corner{ position:absolute; width:22%; height:22%; border:3px solid var(--pink); }
 .marker-demo .m-corner.a{ top:0; left:0; border-right:none; border-bottom:none; }

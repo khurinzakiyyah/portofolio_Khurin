@@ -46,11 +46,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     /* ---------- Role text rotator ---------- */
     const roles = [
-        'Industrial Automation Systems',
-        'Computer Vision Grading Systems',
-        'PLC & HMI Control Logic',
-        'IoT-Connected Devices',
-        'SCADA Monitoring Systems'
+        'Systems, Data & Processes',
+        'Data Integration & Validation',
+        'Industrial Automation & Control',
+        'Process Analysis & Improvement',
+        'SCADA & GIS Monitoring',
+        'Computer Vision Systems'
     ];
     const roleEl = document.getElementById('role-text');
     let roleIndex = 0, charIndex = roles[0].length, deleting = true;

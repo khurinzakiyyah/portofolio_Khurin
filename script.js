@@ -100,18 +100,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
     /* ---------- Certificate modal (PDF.js canvas render — view only) ---------- */
     const certModal = document.getElementById('cert-modal');
-    if (certModal && window.pdfjsLib) {
-        pdfjsLib.GlobalWorkerOptions.workerSrc =
-            'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    if (certModal) {
+        if (window.pdfjsLib) {
+            pdfjsLib.GlobalWorkerOptions.workerSrc = 'assets/vendor/pdfjs/pdf.worker.min.js';
+        }
 
         const pagesEl = document.getElementById('cert-modal-pages');
         const statusEl = document.getElementById('cert-modal-status');
         const certTitle = document.getElementById('cert-modal-title');
         let renderToken = 0;   // bumped on every open/close to abandon stale renders
 
-        const setStatus = (msg) => {
-            if (!msg) { statusEl.classList.add('hidden'); return; }
-            statusEl.textContent = msg;
+        const setStatus = (html) => {
+            if (!html) { statusEl.classList.add('hidden'); return; }
+            statusEl.innerHTML = html;
             statusEl.classList.remove('hidden');
         };
 
@@ -143,7 +144,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             } catch (err) {
                 console.error('Certificate render failed:', err);
-                if (token === renderToken) setStatus('Could not load certificate');
+                if (token === renderToken) {
+                    setStatus('Could not load certificate — ' +
+                        '<a href="' + url + '" target="_blank" rel="noopener">open in a new tab</a>');
+                }
             }
         };
 
@@ -164,6 +168,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         document.querySelectorAll('.cert-link').forEach(link => {
             link.addEventListener('click', (e) => {
+                // PDF.js failed to load → let the link open the PDF normally
+                if (!window.pdfjsLib) return;
                 e.preventDefault();
                 const card = link.closest('.exp-card, .ach-card, .org-card');
                 const heading = card?.querySelector('h3');

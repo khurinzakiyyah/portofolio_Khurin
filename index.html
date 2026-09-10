@@ -385,6 +385,24 @@
     &copy; 2026 Khurin Zakiyyah — Made With <span>Love.</span>
 </footer>
 
+<!-- ============ CERTIFICATE MODAL ============ -->
+<div class="cert-modal" id="cert-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Certificate preview">
+    <div class="cert-modal-backdrop" data-cert-close></div>
+    <div class="cert-modal-box">
+        <div class="cert-modal-bar">
+            <span class="cert-modal-title" id="cert-modal-title">Certificate</span>
+            <div class="cert-modal-actions">
+                <button class="cert-modal-close" data-cert-close aria-label="Close preview"><i class='bx bx-x'></i></button>
+            </div>
+        </div>
+        <div class="cert-modal-body" oncontextmenu="return false">
+            <div class="cert-modal-status" id="cert-modal-status">Loading…</div>
+            <div class="cert-modal-pages" id="cert-modal-pages"></div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script src="script.js"></script>
 </body>
 </html>

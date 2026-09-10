@@ -98,4 +98,85 @@ document.addEventListener('DOMContentLoaded', () => {
         barObserver.observe(skillBars);
     });
 
+    /* ---------- Certificate modal (PDF.js canvas render — view only) ---------- */
+    const certModal = document.getElementById('cert-modal');
+    if (certModal && window.pdfjsLib) {
+        pdfjsLib.GlobalWorkerOptions.workerSrc =
+            'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+        const pagesEl = document.getElementById('cert-modal-pages');
+        const statusEl = document.getElementById('cert-modal-status');
+        const certTitle = document.getElementById('cert-modal-title');
+        let renderToken = 0;   // bumped on every open/close to abandon stale renders
+
+        const setStatus = (msg) => {
+            if (!msg) { statusEl.classList.add('hidden'); return; }
+            statusEl.textContent = msg;
+            statusEl.classList.remove('hidden');
+        };
+
+        const renderPdf = async (url, token) => {
+            setStatus('Loading…');
+            pagesEl.innerHTML = '';
+            let pdf;
+            try {
+                pdf = await pdfjsLib.getDocument(url).promise;
+                if (token !== renderToken) { pdf.destroy(); return; }
+
+                const dpr = Math.min(window.devicePixelRatio || 1, 2);
+                const targetW = Math.max(pagesEl.clientWidth - 40, 280);
+
+                for (let n = 1; n <= pdf.numPages; n++) {
+                    if (token !== renderToken) { pdf.destroy(); return; }
+                    const page = await pdf.getPage(n);
+                    const base = page.getViewport({ scale: 1 });
+                    const viewport = page.getViewport({ scale: (targetW / base.width) * dpr });
+
+                    const canvas = document.createElement('canvas');
+                    canvas.width = viewport.width;
+                    canvas.height = viewport.height;
+                    canvas.style.width = (viewport.width / dpr) + 'px';
+                    pagesEl.appendChild(canvas);
+
+                    await page.render({ canvasContext: canvas.getContext('2d'), viewport }).promise;
+                    setStatus(null);
+                }
+            } catch (err) {
+                console.error('Certificate render failed:', err);
+                if (token === renderToken) setStatus('Could not load certificate');
+            }
+        };
+
+        const openCert = (url, label) => {
+            certTitle.textContent = label || 'Certificate';
+            certModal.classList.add('open');
+            certModal.setAttribute('aria-hidden', 'false');
+            document.body.style.overflow = 'hidden';
+            renderPdf(url, ++renderToken);
+        };
+        const closeCert = () => {
+            renderToken++;   // cancel any in-flight render
+            certModal.classList.remove('open');
+            certModal.setAttribute('aria-hidden', 'true');
+            document.body.style.overflow = '';
+            setTimeout(() => { pagesEl.innerHTML = ''; setStatus('Loading…'); }, 220);
+        };
+
+        document.querySelectorAll('.cert-link').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const card = link.closest('.exp-card, .ach-card, .org-card');
+                const heading = card?.querySelector('h3');
+                openCert(link.getAttribute('href'), heading?.textContent.trim());
+            });
+        });
+
+        certModal.querySelectorAll('[data-cert-close]').forEach(el => {
+            el.addEventListener('click', closeCert);
+        });
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && certModal.classList.contains('open')) closeCert();
+        });
+    }
+
 });

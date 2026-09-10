@@ -343,6 +343,69 @@ section + section{ border-top:1px solid var(--line-soft); }
 .cert-link i{ font-size:1rem; }
 .org-card .cert-link, .ach-card .cert-link{ margin-top:.9rem; }
 
+/* ---- Certificate modal ---- */
+.cert-modal{
+    position:fixed; inset:0; z-index:200;
+    display:flex; align-items:center; justify-content:center;
+    padding:5vh 4vw;
+    opacity:0; visibility:hidden; transition:opacity .22s ease, visibility .22s ease;
+}
+.cert-modal.open{ opacity:1; visibility:visible; }
+.cert-modal-backdrop{
+    position:absolute; inset:0;
+    background:rgba(6,3,5,.78); backdrop-filter:blur(4px);
+}
+.cert-modal-box{
+    position:relative; z-index:1;
+    width:min(920px, 100%); max-height:90vh;
+    display:flex; flex-direction:column;
+    background:var(--surface); border:1px solid var(--line); border-radius:14px;
+    overflow:hidden; box-shadow:0 30px 80px rgba(0,0,0,.55);
+    transform:translateY(14px) scale(.98); transition:transform .22s ease;
+}
+.cert-modal.open .cert-modal-box{ transform:translateY(0) scale(1); }
+.cert-modal-bar{
+    display:flex; align-items:center; justify-content:space-between; gap:1rem;
+    padding:.85rem 1.1rem; border-bottom:1px solid var(--line-soft);
+}
+.cert-modal-title{
+    font-family:var(--font-mono); font-size:.74rem; letter-spacing:.08em;
+    text-transform:uppercase; color:var(--blush);
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.cert-modal-actions{ display:flex; align-items:center; gap:.4rem; flex-shrink:0; }
+.cert-modal-close{
+    display:inline-flex; align-items:center; justify-content:center;
+    width:34px; height:34px; border-radius:9px;
+    border:1px solid var(--line); background:none; color:var(--muted);
+    font-size:1.25rem; cursor:pointer; transition:.2s;
+}
+.cert-modal-close:hover{
+    border-color:var(--pink); color:var(--pink); box-shadow:0 0 14px rgba(255,77,130,.25);
+}
+.cert-modal-body{ position:relative; flex:1; min-height:0; background:#2b2b2b; }
+.cert-modal-pages{
+    height:70vh; overflow-y:auto; overflow-x:hidden;
+    padding:1.2rem; display:flex; flex-direction:column; align-items:center; gap:1.2rem;
+    -webkit-overflow-scrolling:touch;
+}
+.cert-modal-pages canvas{
+    max-width:100%; height:auto; border-radius:4px;
+    box-shadow:0 6px 24px rgba(0,0,0,.45); background:#fff;
+    user-select:none; -webkit-user-select:none; pointer-events:none;
+}
+.cert-modal-status{
+    position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+    font-family:var(--font-mono); font-size:.78rem; letter-spacing:.06em;
+    text-transform:uppercase; color:var(--muted); pointer-events:none; text-align:center;
+}
+.cert-modal-status.hidden{ display:none; }
+@media (max-width:560px){
+    .cert-modal{ padding:0; }
+    .cert-modal-box{ max-height:100vh; height:100vh; border-radius:0; border:0; }
+    .cert-modal-pages{ height:100%; }
+}
+
 /* =========================================================
    PROJECTS (thesis spotlight)
    ========================================================= */
